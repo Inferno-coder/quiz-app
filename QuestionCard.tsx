@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Options from './Options'
-
+import localData from '../data.json'
 export interface IQuestions {
   type: string,
   difficulty: string,
@@ -14,8 +14,6 @@ export interface IApiResponse {
   response_code: number,
   results: IQuestions[]
 }
-
-
 
 const QuestionCard: React.FC = () => {
   const [count, setcount] = useState<number>(1)
@@ -32,13 +30,7 @@ const QuestionCard: React.FC = () => {
   }
 
   useEffect(() => {
-    fetch('https://opentdb.com/api.php?amount=15&category=9&difficulty=medium&type=multiple')
-      .then(async (response) => {
-        const questions = await response.json();
-        if (questions) {
-          setData(questions);
-        }
-      });
+     setData(localData)
   }, [])
 
   return (
@@ -47,7 +39,7 @@ const QuestionCard: React.FC = () => {
         <div className='question-card'>
           <div className="question-status">
             <div>{answered} Answered</div>
-            <div>{15 - answered} not Answered</div>
+            <div>{5 - answered} not Answered</div>
           </div>
           <div className="question-card-difficulty diff-medi">
             <h1>Medium</h1>
@@ -72,15 +64,12 @@ const QuestionCard: React.FC = () => {
             <button 
             className='nxt-btn' 
             onClick={onNextHandle}
-            disabled={count>=15}
-            >Next <i className="fas fa-arrow-right"></i>  </button>
+            >{count<=4?'Next':'Submit'}{count<5?<i className="fas fa-arrow-right"></i>:<></>}</button>
           </div>
         </div> : <h1>Loading</h1>
       }
     </div>
   )
-
-
 }
 
 export default QuestionCard
